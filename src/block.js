@@ -74,13 +74,7 @@ class Block {
         // Parse the data to an object to be retrieve.
         const obj = JSON.parse(jsonData);
         // Resolve with the data if the object isn't the Genesis block
-        return new Promise(function(resolve, reject) { 
-            if(self.height != 0) {
-                resolve(obj);
-            } else {
-                reject();
-            }
-         });
+        return obj;
     }
 
 }

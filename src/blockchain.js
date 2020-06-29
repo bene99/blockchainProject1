@@ -180,9 +180,9 @@ class Blockchain {
         return new Promise((resolve, reject) => {
             this.chain.forEach(function(block) {
                 if(block.height != 0) {
-                const obj = JSON.parse(hex2ascii(block.body));
-                if(obj.owner == address) {
-                    stars.push(obj);
+                const blockObj = block.getBData();
+                if(blockObj.owner == address) {
+                    stars.push(blockObj);
                 }
             }
             });
@@ -200,12 +200,19 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            block = self.chain[self.chain.length-1];
-            block.validate();
-            while(block.hash != null) {
-                block = self.getBlockByHash(block.previousBlockHash);
-                block.validate();
-            }
+
+            this.chain.forEach(async function(block) {
+               
+               const valid = await block.validate();
+               if(!valid) {
+                    errorLog.push(`Block ${block.height} is invalid`);
+               } 
+               const prevBlock = getBlockByHash(block.previousBlockHash);
+               if(prevBlock == null || prevBlock.height != block.height -1) {
+                errorLog.push(`Illegal previous blockhash at block ${block.height}`);  
+               }
+            });
+            resolve(errorLog);
         });
     }
 
