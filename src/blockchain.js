@@ -207,10 +207,12 @@ class Blockchain {
                if(!valid) {
                     errorLog.push(`Block ${block.height} is invalid`);
                } 
-               const prevBlock = getBlockByHash(block.previousBlockHash);
-               if(prevBlock == null || prevBlock.height != block.height -1) {
-                errorLog.push(`Illegal previous blockhash at block ${block.height}`);  
-               }
+               if(block.height > 0) {
+                const prevBlock = getBlockByHash(block.previousBlockHash);
+                if(prevBlock == null || prevBlock.height != block.height -1) {
+                    errorLog.push(`Illegal previous blockhash at block ${block.height}`);  
+                }
+            }
             });
             resolve(errorLog);
         });
