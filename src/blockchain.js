@@ -209,7 +209,7 @@ class Blockchain {
                } 
                if(block.height > 0) {
                 const prevBlock = getBlockByHash(block.previousBlockHash);
-                if(prevBlock == null || prevBlock.height != block.height -1) {
+                if(prevBlock.hash != block.previousBlockHash) {
                     errorLog.push(`Illegal previous blockhash at block ${block.height}`);  
                 }
             }
